@@ -15,6 +15,8 @@ let hue = 0;
 const hueIncrement = 0.1;
 let animationId = null;
 let activeSquare = null;
+let score = 0;
+let targetSquare = null;
 
 function generateColor(hue) {
     return `hsl(${hue}, 90%, 70%)`;
@@ -29,6 +31,28 @@ function animateColor() {
     animationId = requestAnimationFrame(animateColor);
 }
 
+function updateScore() {
+    document.getElementById("score").textContent = score;
+}
+
+function resetGame() {
+    score = 0;
+    updateScore();
+    if (targetSquare) {
+        targetSquare.style.backgroundColor = "white";
+    }
+    createNewTarget();
+}
+
+function createNewTarget() {
+    const squares = document.querySelectorAll(".squares");
+    if (targetSquare) {
+        targetSquare.style.backgroundColor = "white";
+    }
+    targetSquare = squares[Math.floor(Math.random() * squares.length)];
+    targetSquare.style.backgroundColor = "black";
+}
+
 for (let i = 0; i < maxBlockInRow * maxRows; i++) {
     let squares = document.createElement("div");
     squares.classList.add("squares");
@@ -40,6 +64,12 @@ for (let i = 0; i < maxBlockInRow * maxRows; i++) {
         if (!animationId) {
             animationId = requestAnimationFrame(animateColor);
         }
+        
+        if (squares === targetSquare) {
+            score++;
+            updateScore();
+            createNewTarget();
+        }
     });
 
     squares.addEventListener("mouseleave", () => {
@@ -49,7 +79,15 @@ for (let i = 0; i < maxBlockInRow * maxRows; i++) {
             animationId = null;
         }
         setTimeout(() => {
-            squares.style.backgroundColor = "white";
-        }, 150);
+            if (squares !== targetSquare) {
+                squares.style.backgroundColor = "white";
+            }
+        }, 1000);
     });
 }
+
+container.addEventListener("mouseleave", resetGame);
+
+// Start the game
+createNewTarget();
+updateScore();
