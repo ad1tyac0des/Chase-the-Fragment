@@ -122,7 +122,27 @@ function createSquares() {
     }
 }
 
-container.addEventListener("mouseleave", resetGame);
+gsap.set(info, { y: 60, opacity: 0 });
+container.addEventListener("mouseenter", () => {
+    // Reset the position of the info element
+    gsap.set(info, { y: 60, opacity: 0 });
+
+    // Animate the info element
+    gsap.to(info, {
+        opacity: 1,
+        y: 0,
+        duration: .6,
+    });
+});
+
+container.addEventListener("mouseleave", () => {
+    gsap.to(info, {
+        opacity: 0,
+        y: 60,
+        duration: .6,
+        onComplete: resetGame
+    });
+});
 
 // Start the game
 createSquares();
