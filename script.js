@@ -82,7 +82,7 @@ for (let i = 0; i < maxBlockInRow * maxRows; i++) {
             if (squares !== targetSquare) {
                 squares.style.backgroundColor = "white";
             }
-        }, 1000);
+        }, 100);
     });
 }
 
