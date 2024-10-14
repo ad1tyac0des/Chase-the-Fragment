@@ -1,22 +1,39 @@
+const container = document.querySelector(".container");
+const info = document.querySelector(".info");
+let maxBlockInRow, maxRows, squaresWidth, squaresGap, containerPadding;
+
 function pxToVw(px, baseWidth = 1920) {
     return (px / baseWidth) * 100;
 }
 
-const container = document.querySelector(".container");
-const info = document.querySelector(".info");
-const maxBlockInRow = 40;
-const maxRows = 10;
-const squaresWidth = pxToVw(30);
-const squaresGap = pxToVw(0);
-const containerPadding = pxToVw(0);
+squaresGap = pxToVw(0);
+containerPadding = pxToVw(0);
 
-const containerWidth = containerPadding + maxBlockInRow * squaresGap + maxBlockInRow * squaresWidth;
-const infoWidth = containerWidth;
+function setLayoutParameters() {
+    if (window.innerWidth >= 1200) {
+        maxBlockInRow = 40;
+        maxRows = 10;
+        squaresWidth = pxToVw(40);
+    } else if (window.innerWidth >= 640) {
+        maxBlockInRow = 20;
+        maxRows = 15;
+        squaresWidth = pxToVw(70);
+    } else {
+        maxBlockInRow = 10;
+        maxRows = 20;
+        squaresWidth = pxToVw(150);
+    }
 
-container.style.width = `${containerWidth}vw`;
-info.style.width = `${infoWidth}vw`;
-container.style.padding = `${containerPadding}vw`;
-container.style.gap = `${squaresGap}vw`;
+    const containerWidth = containerPadding + maxBlockInRow * squaresGap + maxBlockInRow * squaresWidth;
+    const infoWidth = containerWidth;
+
+    container.style.width = `${containerWidth}vw`;
+    info.style.width = `${infoWidth}vw`;
+    container.style.padding = `${containerPadding}vw`;
+    container.style.gap = `${squaresGap}vw`;
+}
+
+setLayoutParameters();
 
 let hue = 0;
 const hueIncrement = 0.1;
@@ -67,43 +84,48 @@ function createNewTarget() {
     targetSquare.style.transition = "background-color .1s";
 }
 
-for (let i = 0; i < maxBlockInRow * maxRows; i++) {
-    let squares = document.createElement("div");
-    squares.classList.add("squares");
-    squares.style.width = `${squaresWidth}vw`;
-    container.appendChild(squares);
+function createSquares() {
+    container.innerHTML = ''; // Clear existing squares
+    for (let i = 0; i < maxBlockInRow * maxRows; i++) {
+        let squares = document.createElement("div");
+        squares.classList.add("squares");
+        squares.style.width = `${squaresWidth}vw`;
+        squares.style.height = `${squaresWidth}vw`;
+        container.appendChild(squares);
 
-    squares.addEventListener("mouseover", () => {
-        activeSquare = squares;
-        if (!animationId) {
-            animationId = requestAnimationFrame(animateColor);
-        }
-        
-        if (squares === targetSquare) {
-            score++;
-            updateScore();
-            createNewTarget();
-        }
-    });
-
-    squares.addEventListener("mouseleave", () => {
-        activeSquare = null;
-        if (animationId) {
-            cancelAnimationFrame(animationId);
-            animationId = null;
-        }
-        setTimeout(() => {
-            if (squares !== targetSquare) {
-                squares.style.backgroundColor = "white";
-                squares.style.transition = "background-color 0.4s";
+        squares.addEventListener("mouseover", () => {
+            activeSquare = squares;
+            if (!animationId) {
+                animationId = requestAnimationFrame(animateColor);
             }
-        }, 1500);
-    });
+            
+            if (squares === targetSquare) {
+                score++;
+                updateScore();
+                createNewTarget();
+            }
+        });
+
+        squares.addEventListener("mouseleave", () => {
+            activeSquare = null;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            setTimeout(() => {
+                if (squares !== targetSquare) {
+                    squares.style.backgroundColor = "white";
+                    squares.style.transition = "background-color 0.4s";
+                }
+            }, 1500);
+        });
+    }
 }
 
 container.addEventListener("mouseleave", resetGame);
 
 // Start the game
+createSquares();
 createNewTarget();
 updateScore();
 
@@ -116,4 +138,11 @@ if (localStorage.getItem("highScore")) {
 // Save high score to localStorage when the page is about to unload
 window.addEventListener("beforeunload", () => {
     localStorage.setItem("highScore", highScore);
+});
+
+// Responsive layout adjustment
+window.addEventListener('resize', () => {
+    setLayoutParameters();
+    createSquares();
+    createNewTarget();
 });
