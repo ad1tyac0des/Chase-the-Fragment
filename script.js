@@ -1,25 +1,29 @@
+function pxToVw(px, baseWidth = 1920) {
+    return (px / baseWidth) * 100;
+}
+
 const container = document.querySelector(".container");
 const info = document.querySelector(".info");
 const maxBlockInRow = 40;
 const maxRows = 10;
-const squaresWidth = 30;
-const squaresGap = 1;
-const containerPadding = 1;
+const squaresWidth = pxToVw(30);
+const squaresGap = pxToVw(0);
+const containerPadding = pxToVw(0);
 
 const containerWidth = containerPadding + maxBlockInRow * squaresGap + maxBlockInRow * squaresWidth;
-const infoWidth = containerPadding + maxBlockInRow * squaresGap + maxBlockInRow * squaresWidth;
+const infoWidth = containerWidth;
 
-container.style.width = `${containerWidth}px`;
-info.style.width = `${infoWidth}px`;
-container.style.padding = `${containerPadding}px`;
-container.style.gap = `${squaresGap}px`;
+container.style.width = `${containerWidth}vw`;
+info.style.width = `${infoWidth}vw`;
+container.style.padding = `${containerPadding}vw`;
+container.style.gap = `${squaresGap}vw`;
 
 let hue = 0;
 const hueIncrement = 0.1;
 let animationId = null;
 let activeSquare = null;
 let score = 0;
-let highScore = 0; // New line: Add high score variable
+let highScore = 0;
 let targetSquare = null;
 
 function generateColor(hue) {
@@ -38,7 +42,6 @@ function animateColor() {
 function updateScore() {
     document.querySelector(".score span").textContent = score;
     
-    // New code: Update high score if the current score is higher
     if (score > highScore) {
         highScore = score;
         document.querySelector(".high-score span").textContent = highScore;
@@ -67,7 +70,7 @@ function createNewTarget() {
 for (let i = 0; i < maxBlockInRow * maxRows; i++) {
     let squares = document.createElement("div");
     squares.classList.add("squares");
-    squares.style.width = `${squaresWidth}px`;
+    squares.style.width = `${squaresWidth}vw`;
     container.appendChild(squares);
 
     squares.addEventListener("mouseover", () => {
@@ -104,13 +107,13 @@ container.addEventListener("mouseleave", resetGame);
 createNewTarget();
 updateScore();
 
-// New code: Load high score from localStorage if available
+// Load high score from localStorage if available
 if (localStorage.getItem("highScore")) {
     highScore = parseInt(localStorage.getItem("highScore"));
     document.querySelector(".high-score span").textContent = highScore;
 }
 
-// New code: Save high score to localStorage when the page is about to unload
+// Save high score to localStorage when the page is about to unload
 window.addEventListener("beforeunload", () => {
     localStorage.setItem("highScore", highScore);
 });
