@@ -3,7 +3,9 @@
 Chase The Fragment is an interactive web-based game where players must quickly move their cursor to catch a moving target square among a grid of squares. The game features color-changing animations, score tracking, and responsive design for various screen sizes.
 
 ## Demo
-[Play Now](https://github.com/ad1tyac0des/Chase-the-Fragment/)
+[Play Now](https://ad1tyac0des.github.io/Chase-the-Fragment/)
+
+![Chase The Fragment](./docs/demo.gif)
 
 ## Features
 
