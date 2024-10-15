@@ -29,6 +29,10 @@ Chase The Fragment is an interactive web-based game where players must quickly m
 3. Each time you catch the target, your score increases and a new target appears.
 4. Try to achieve the highest score possible!
 
+## ⚠️ Note:
+
+This game relies on mouse movement for interaction, so it’s optimized for desktop devices. Unfortunately, since touch devices don’t have a cursor, the experience might not work as expected on mobile or tablets.
+
 ## Credits
 
 - Fonts: Neue Machina
